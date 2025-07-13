@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Lab Simulation</title>
+    <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="control-panel">
+            <h2>Network Learning Lab</h2>
+            
+            <div class="info-section">
+                <h4>Welcome to Network Fundamentals!</h4>
+                <p>This simulator teaches how DNS and DHCP work in real networks. Watch data flow and learn step-by-step!</p>
+            </div>
+
+            <button class="btn" onclick="addClient()">Add Network Device</button>
+            <input type="text" class="domain-input" id="domain-input" placeholder="Enter domain (e.g., google.com)" value="google.com">
+            <button class="btn" onclick="performDNSQuery()">DNS Query (Name Resolution)</button>
+            <button class="btn" onclick="simulateDHCPRequest()">DHCP Request (Get IP Address)</button>
+            <button class="btn" onclick="clearDNSCache()">Clear DNS Cache</button>
+            <button class="btn" onclick="toggleHelp()">Show/Hide Help</button>
+            <button class="btn" onclick="clearAll()">Reset Everything</button>
+            
+            <div class="info-section">
+                <h4>Quick Tips</h4>
+                <p>• Drag any device to move it around</p>
+                <p>• Click clients to request IP addresses</p>
+                <p>• Watch colored packets flow along connections</p>
+                <p>• Read the explanations on the right panel</p>
+            </div>
+
+            <div class="glossary" id="glossary" style="display: none;">
+                <h4>Technical Terms Explained</h4>
+                <div class="glossary-term">
+                    <div class="term-name">DNS (Domain Name System)</div>
+                    <div>Translates human-readable website names (like google.com) into IP addresses that computers use</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="term-name">DHCP (Dynamic Host Configuration Protocol)</div>
+                    <div>Automatically assigns IP addresses to devices joining a network</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="term-name">IP Address</div>
+                    <div>A unique number (like 192.168.1.10) that identifies each device on a network</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="term-name">Switch</div>
+                    <div>A device that connects multiple devices together in a local network</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="term-name">Cache</div>
+                    <div>Temporary storage of recently looked-up information for faster access</div>
+                </div>
+                <div class="glossary-term">
+                    <div class="term-name">TTL (Time To Live)</div>
+                    <div>How long cached information stays valid before it expires</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="educational-panel">
+            <h3>Network Lab Simulation</h3>
+            
+            <div class="info-section">
+                <h4>How DHCP Works (Automatic IP Assignment)</h4>
+                <p><strong>Purpose:</strong> Your router automatically gives each device a unique IP address so they can communicate on the network.</p>
+                <p><strong>DORA Process:</strong> <strong>D</strong>iscover → <strong>O</strong>ffer → <strong>R</strong>equest → <strong>A</strong>cknowledge</p>
+            </div>
+
+            <div class="activity-log">
+                <h4>Network Activity with Explanations</h4>
+                <div id="activity-log"></div>
+            </div>
+
+            <div class="info-section" style="margin-top: 20px;">
+                <h4>How DNS Works (Domain Name Resolution)</h4>
+                <p><strong>Purpose:</strong> DNS is like the internet's phone book. When you type "google.com", your router finds the actual IP address (like 142.250.185.78) where that website lives.</p>
+                <p><strong>Process:</strong> Your device asks the router "Where is google.com?" The router either knows the answer (cached) or asks internet servers until it finds out.</p>
+            </div>
+
+            <div class="resolution-process">
+                <h4>Current DNS Resolution Steps</h4>
+                <p style="font-size: 10px; margin-bottom: 8px;">Watch how the router finds website addresses step-by-step:</p>
+                <div id="resolution-steps"></div>
+            </div>
+            
+            <div class="dns-cache">
+                <h4>Router DNS Cache (Recently Looked Up Websites)</h4>
+                <p style="font-size: 10px; margin-bottom: 8px;">The router remembers recent lookups to answer faster next time:</p>
+                <div id="dns-cache-entries"></div>
+            </div>
+        </div>
+
+        <div class="dora-panel">
+            <h3>DHCP DORA Process - Live Status</h3>
+            <div class="dora-steps" id="dora-steps">
+                <div class="dora-step">
+                    <h4>DISCOVER</h4>
+                    <p style="font-size: 11px;">Client broadcasts: "I need an IP address!"</p>
+                </div>
+                <div class="dora-step">
+                    <h4>OFFER</h4>
+                    <p style="font-size: 11px;">Router responds: "I can offer you this IP"</p>
+                </div>
+                <div class="dora-step">
+                    <h4>REQUEST</h4>
+                    <p style="font-size: 11px;">Client confirms: "Yes, I accept that IP"</p>
+                </div>
+                <div class="dora-step">
+                    <h4>ACKNOWLEDGE</h4>
+                    <p style="font-size: 11px;">Router confirms: "IP is now yours!"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="network-area" id="network-area">
+            <div class="internet-gateway" id="internet-gateway">
+                <svg class="server-icon" viewBox="0 0 24 24" fill="#42a5f5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="white" stroke-width="1"/>
+                </svg>
+                <div class="server-label">Internet</div>
+            </div>
+
+            <div class="router" id="router">
+                <div class="router-label">Router (192.168.1.1)</div>
+                <div class="router-internal">
+                    <div class="internal-component dns-component" id="dns-component">
+                        <svg class="component-icon" viewBox="0 0 24 24" fill="#00ff88">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M9 12l2 2 4-4" stroke="#00ff88" stroke-width="2" fill="none"/>
+                        </svg>
+                        <div>DNS</div>
+                    </div>
+                    <div class="internal-component dhcp-component" id="dhcp-component">
+                        <svg class="component-icon" viewBox="0 0 24 24" fill="#ff6b6b">
+                            <rect x="4" y="8" width="16" height="8" rx="1"/>
+                            <path d="M7 11h6" stroke="white" stroke-width="1"/>
+                        </svg>
+                        <div>DHCP</div>
+                    </div>
+                    <div class="internal-component gateway-component" id="gateway-component">
+                        <svg class="component-icon" viewBox="0 0 24 24" fill="#42a5f5">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <div>Gateway</div>
+                    </div>
+                    <div class="internal-component firewall-component" id="firewall-component">
+                        <svg class="component-icon" viewBox="0 0 24 24" fill="#ffa726">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+                        </svg>
+                        <div>Firewall</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="switch" id="switch">
+                <svg class="switch-icon" viewBox="0 0 24 24" fill="#9c27b0">
+                    <rect x="2" y="8" width="20" height="8" rx="2"/>
+                    <circle cx="6" cy="12" r="1" fill="white"/>
+                    <circle cx="10" cy="12" r="1" fill="white"/>
+                    <circle cx="14" cy="12" r="1" fill="white"/>
+                    <circle cx="18" cy="12" r="1" fill="white"/>
+                </svg>
+                <div class="server-label">Network Switch</div>
+                <div class="server-status">8-Port Gigabit</div>
+            </div>
+        </div>
+
+        <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <script src="/public/script.js"></script>
+</body>
+</html>

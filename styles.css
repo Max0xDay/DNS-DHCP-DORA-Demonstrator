@@ -1,0 +1,665 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    color: #e6e6fa;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+}
+
+.control-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(30, 30, 60, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(100, 100, 255, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 320px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.control-panel h2 {
+    margin-bottom: 15px;
+    color: #64ffda;
+    font-size: 18px;
+}
+
+.btn {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px 0;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    width: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.btn.help {
+    background: linear-gradient(45deg, #ffa726 0%, #fb8c00 100%);
+    box-shadow: 0 4px 15px rgba(255, 167, 38, 0.4);
+}
+
+.educational-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(30, 30, 60, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(100, 255, 136, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.educational-panel h3 {
+    color: #00ff88;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.info-section {
+    background: rgba(100, 255, 218, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.info-section h4 {
+    color: #64ffda;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.info-section p {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.dns-cache {
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.dns-cache h4 {
+    color: #00ff88;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.cache-entry {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cache-ttl {
+    color: #ffa726;
+    font-weight: bold;
+}
+
+.resolution-process {
+    background: rgba(100, 255, 218, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.resolution-process h4 {
+    color: #64ffda;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.resolution-step {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border-left: 3px solid #64ffda;
+    font-size: 11px;
+    animation: fadeInStep 0.5s ease;
+}
+
+.resolution-step.active {
+    background: rgba(100, 255, 218, 0.2);
+    border-left-color: #00ff88;
+}
+
+.resolution-step.completed {
+    background: rgba(0, 255, 136, 0.1);
+    border-left-color: #00ff88;
+}
+
+.dhcp-process {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.dhcp-process h4 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.dhcp-step {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border-left: 3px solid #ff6b6b;
+    font-size: 11px;
+    animation: fadeInStep 0.5s ease;
+}
+
+.dhcp-step.active {
+    background: rgba(255, 107, 107, 0.2);
+    border-left-color: #ffa726;
+}
+
+.dhcp-step.completed {
+    background: rgba(255, 107, 107, 0.1);
+    border-left-color: #00ff88;
+}
+
+@keyframes fadeInStep {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.activity-log {
+    background: rgba(255, 167, 38, 0.1);
+    border: 1px solid rgba(255, 167, 38, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.activity-log h4 {
+    color: #ffa726;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.log-entry {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border-left: 3px solid #ffa726;
+    font-size: 11px;
+    animation: fadeIn 0.5s ease;
+}
+
+.log-entry.explanation {
+    background: rgba(100, 255, 218, 0.1);
+    border-left-color: #64ffda;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.network-area {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    width: 50%;
+    height: 60%;
+    min-width: 800px;
+    min-height: 500px;
+}
+
+.draggable {
+    cursor: move;
+    user-select: none;
+}
+
+.draggable:active {
+    cursor: grabbing;
+}
+
+.dragging {
+    z-index: 1000;
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.6);
+}
+
+.server {
+    position: absolute;
+    width: 140px;
+    height: 160px;
+    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+    border: 2px solid #4a90e2;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.server:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(74, 144, 226, 0.5);
+}
+
+.router {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 280px;
+    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+    border: 3px solid #4a90e2;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
+    transition: all 0.3s ease;
+    z-index: 10;
+    padding: 20px;
+}
+
+.router:hover {
+    box-shadow: 0 15px 40px rgba(74, 144, 226, 0.5);
+}
+
+.router-label {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    color: #4a90e2;
+    margin-bottom: 15px;
+}
+
+.router-internal {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+    height: 220px;
+}
+
+.internal-component {
+    background: linear-gradient(145deg, #3a3a5a, #2a2a4a);
+    border: 2px solid;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 15;
+    padding: 10px;
+}
+
+.internal-component:hover {
+    transform: scale(1.1);
+}
+
+.dns-component {
+    border-color: #00ff88;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+}
+
+.dhcp-component {
+    border-color: #ff6b6b;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+}
+
+.gateway-component {
+    border-color: #42a5f5;
+    box-shadow: 0 4px 15px rgba(66, 165, 245, 0.2);
+}
+
+.firewall-component {
+    border-color: #ffa726;
+    box-shadow: 0 4px 15px rgba(255, 167, 38, 0.2);
+}
+
+.component-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 8px;
+}
+
+.internal-wire {
+    position: absolute;
+    height: 4px;
+    background: rgba(100, 255, 218, 0.7);
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 2px;
+}
+
+.dora-panel {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 30, 60, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    width: 700px;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.dora-panel h3 {
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.dora-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.dora-step {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.dora-step h4 {
+    color: #ff6b6b;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.dora-step.active {
+    background: rgba(255, 107, 107, 0.2);
+    border-color: #ffa726;
+}
+
+.dora-step.completed {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: #00ff88;
+}
+
+.dora-step p {
+    font-size: 11px;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.dns-server, .dhcp-server {
+    display: none;
+}
+
+.switch {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 80px;
+    background: linear-gradient(145deg, #4a4a6a, #3a3a5a);
+    border: 2px solid #9c27b0;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(156, 39, 176, 0.3);
+    z-index: 10;
+}
+
+.internet-gateway {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(145deg, #1976d2, #1565c0);
+    border: 2px solid #42a5f5;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(25, 118, 210, 0.3);
+    z-index: 10;
+}
+
+.server-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.switch-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.server-label {
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+}
+
+.server-status {
+    font-size: 9px;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+.dns-details {
+    font-size: 8px;
+    margin-top: 8px;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.client {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(145deg, #3a3a5a, #2a2a4a);
+    border: 2px solid #64ffda;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.client:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(100, 255, 218, 0.5);
+}
+
+.client-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.client-label {
+    font-size: 9px;
+    text-align: center;
+}
+
+.wire {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(100, 255, 218, 0.4), rgba(100, 255, 218, 0.1));
+    border-radius: 1px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.data-packet {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #64ffda;
+    border-radius: 50%;
+    box-shadow: 0 0 15px currentColor;
+    z-index: 10;
+    pointer-events: none;
+}
+
+@keyframes packetPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+.packet-dns { background: #00ff88; color: #00ff88; }
+.packet-dhcp { background: #ff6b6b; color: #ff6b6b; }
+.packet-query { background: #ffa726; color: #ffa726; }
+.packet-response { background: #64ffda; color: #64ffda; }
+.packet-discover { background: #e91e63; color: #e91e63; }
+.packet-offer { background: #4caf50; color: #4caf50; }
+.packet-request { background: #ff9800; color: #ff9800; }
+.packet-ack { background: #2196f3; color: #2196f3; }
+
+.activity-indicator {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background: #64ffda;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.dns-indicator { background: #00ff88; }
+.dhcp-indicator { background: #ff6b6b; }
+.query-indicator { background: #ffa726; }
+
+.domain-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+}
+
+.domain-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    max-width: 250px;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+.glossary {
+    background: rgba(156, 39, 176, 0.1);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.glossary h4 {
+    color: #9c27b0;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.glossary-term {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-size: 11px;
+}
+
+.term-name {
+    color: #ba68c8;
+    font-weight: bold;
+}
