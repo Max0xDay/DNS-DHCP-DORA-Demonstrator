@@ -521,7 +521,7 @@ async function performDNSQuery() {
     await createDataPacket({ x: randomClient.x, y: randomClient.y }, switchCenter, 'query', `DNS Query: ${domain}`);
     await createDataPacket(switchCenter, routerCenter, 'query', `DNS Query: ${domain}`);
     
-    await createInternalRouterPacket(firewallCenter, dnsCenter, 'query', 'DNS Query');
+    await createInternalRouterPacket(routerCenter, dnsCenter, 'query', 'DNS Query');
     showActivity('router', 'query');
     
     await new Promise(resolve => setTimeout(resolve, 800));
@@ -550,7 +550,7 @@ async function performDNSQuery() {
         });
         updateResolutionProcess(resolutionSteps);
         
-        await createInternalRouterPacket(dnsCenter, firewallCenter, 'response', 'DNS Response');
+        await createInternalRouterPacket(dnsCenter, routerCenter, 'response', 'DNS Response');
         
         await createDataPacket(routerCenter, switchCenter, 'response', `DNS Response: ${cached.ip}`);
         await createDataPacket(switchCenter, { x: randomClient.x, y: randomClient.y }, 'response', `DNS Response: ${cached.ip}`);
@@ -571,11 +571,13 @@ async function performDNSQuery() {
         const internetCenter = getServerCenter('internet-gateway');
         
         await createInternalRouterPacket(dnsCenter, gatewayCenter, 'query', 'Root Query');
+        await createInternalRouterPacket(gatewayCenter, firewallCenter, 'query', 'Root Query (via Firewall)');
         await createDataPacket(routerCenter, internetCenter, 'query', 'Root Query');
         
         await new Promise(resolve => setTimeout(resolve, 800));
         
         await createDataPacket(internetCenter, routerCenter, 'response', 'Root Response');
+        await createInternalRouterPacket(firewallCenter, gatewayCenter, 'response', 'Root Response (via Firewall)');
         await createInternalRouterPacket(gatewayCenter, dnsCenter, 'response', 'Root Response');
         
         resolutionSteps[2].status = 'completed';
@@ -594,11 +596,13 @@ async function performDNSQuery() {
         await new Promise(resolve => setTimeout(resolve, 500));
         
         await createInternalRouterPacket(dnsCenter, gatewayCenter, 'query', 'TLD Query');
+        await createInternalRouterPacket(gatewayCenter, firewallCenter, 'query', 'TLD Query (via Firewall)');
         await createDataPacket(routerCenter, internetCenter, 'query', 'TLD Query');
         
         await new Promise(resolve => setTimeout(resolve, 800));
         
         await createDataPacket(internetCenter, routerCenter, 'response', 'TLD Response');
+        await createInternalRouterPacket(firewallCenter, gatewayCenter, 'response', 'TLD Response (via Firewall)');
         await createInternalRouterPacket(gatewayCenter, dnsCenter, 'response', 'TLD Response');
         
         resolutionSteps[3].status = 'completed';
@@ -615,6 +619,7 @@ async function performDNSQuery() {
         await new Promise(resolve => setTimeout(resolve, 500));
         
         await createInternalRouterPacket(dnsCenter, gatewayCenter, 'query', 'Auth Query');
+        await createInternalRouterPacket(gatewayCenter, firewallCenter, 'query', 'Auth Query (via Firewall)');
         await createDataPacket(routerCenter, internetCenter, 'query', 'Auth Query');
         
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -622,6 +627,7 @@ async function performDNSQuery() {
         const ip = domainDatabase[domain] || `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
         
         await createDataPacket(internetCenter, routerCenter, 'response', `Final Answer: ${ip}`);
+        await createInternalRouterPacket(firewallCenter, gatewayCenter, 'response', `Final Answer: ${ip} (via Firewall)`);
         await createInternalRouterPacket(gatewayCenter, dnsCenter, 'response', `Final Answer: ${ip}`);
         
         resolutionSteps[4].status = 'completed';
@@ -640,7 +646,7 @@ async function performDNSQuery() {
         
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        await createInternalRouterPacket(dnsCenter, firewallCenter, 'response', `Final: ${ip}`);
+        await createInternalRouterPacket(dnsCenter, routerCenter, 'response', `Final: ${ip}`);
         await createDataPacket(routerCenter, switchCenter, 'response', `Final: ${ip}`);
         await createDataPacket(switchCenter, { x: randomClient.x, y: randomClient.y }, 'response', `Final: ${ip}`);
         
@@ -677,12 +683,11 @@ async function requestIP(clientId) {
     
     const switchCenter = getServerCenter('switch');
     const routerCenter = getServerCenter('router');
-    const firewallCenter = getInternalComponentCenter('firewall-component');
     const dhcpCenter = getInternalComponentCenter('dhcp-component');
     
     await createDataPacket({ x: client.x, y: client.y }, switchCenter, 'discover', 'DHCP Discover');
     await createDataPacket(switchCenter, routerCenter, 'discover', 'DHCP Discover');
-    await createInternalRouterPacket(firewallCenter, dhcpCenter, 'discover', 'DHCP Discover');
+    await createInternalRouterPacket(routerCenter, dhcpCenter, 'discover', 'DHCP Discover');
     showActivity('router', 'dhcp');
     
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -697,7 +702,7 @@ async function requestIP(clientId) {
     });
     updateDHCPProcess(dhcpSteps);
     
-    await createInternalRouterPacket(dhcpCenter, firewallCenter, 'offer', `DHCP Offer: ${ipPool[0]}`);
+    await createInternalRouterPacket(dhcpCenter, routerCenter, 'offer', `DHCP Offer: ${ipPool[0]}`);
     await createDataPacket(routerCenter, switchCenter, 'offer', `DHCP Offer: ${ipPool[0]}`);
     await createDataPacket(switchCenter, { x: client.x, y: client.y }, 'offer', `DHCP Offer: ${ipPool[0]}`);
     
@@ -715,7 +720,7 @@ async function requestIP(clientId) {
     
     await createDataPacket({ x: client.x, y: client.y }, switchCenter, 'request', 'DHCP Request');
     await createDataPacket(switchCenter, routerCenter, 'request', 'DHCP Request');
-    await createInternalRouterPacket(firewallCenter, dhcpCenter, 'request', 'DHCP Request');
+    await createInternalRouterPacket(routerCenter, dhcpCenter, 'request', 'DHCP Request');
     
     await new Promise(resolve => setTimeout(resolve, 1000));
     
@@ -735,7 +740,7 @@ async function requestIP(clientId) {
     const label = client.element.querySelector('.client-label');
     label.innerHTML = `${client.name}<br><small>${assignedIP}</small>`;
     
-    await createInternalRouterPacket(dhcpCenter, firewallCenter, 'ack', `DHCP ACK: ${assignedIP}`);
+    await createInternalRouterPacket(dhcpCenter, routerCenter, 'ack', `DHCP ACK: ${assignedIP}`);
     await createDataPacket(routerCenter, switchCenter, 'ack', `DHCP ACK: ${assignedIP}`);
     await createDataPacket(switchCenter, { x: client.x, y: client.y }, 'ack', `DHCP ACK: ${assignedIP}`);
     
